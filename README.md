@@ -1,9 +1,5 @@
 # 通用型組織績效評核偏誤自動化偵測框架
 
-> 以機器學習為基礎之通用型組織績效評核偏誤自動化偵測框架
-> 東吳大學巨量資料管理學院 資料科學系碩士在職專班碩士論文
-> 研究生：余姿瑩　指導教授：葉向原博士
-
 本專案提供一套**可跨組織、跨資料結構**的績效評核偏誤偵測工具。在排除敏感特徵的條件下，以機器學習建立員工「應得評分」的客觀基準，並從**個體層級（殘差分析）** 與 **群體層級（公平性指標）** 雙軌偵測潛在偏誤，輔以統計檢定與 SHAP 可解釋性分析。使用者無需具備程式能力，即可透過 Streamlit 網頁平台上傳資料、設定欄位、一鍵產出偏誤偵測報告與校正建議。
 
 ---
@@ -28,18 +24,14 @@ project-root/
 ├── requirements.txt                # Python 套件清單
 ├── packages.txt                    # 系統套件（中文字型，供 Streamlit Cloud）
 ├── README.md
-├── notebooks/
-│   ├── teacher_baseline.ipynb      # 老師原始版本（離職預測，備存對照）
-│   ├── cleaned_hr_data.ipynb       # 資料清洗與特徵工程，產出 cleaned_hr_data.csv
-│   └── validation.ipynb            # （選用）端到端驗證，佐證框架通用性
-│   └── data/
-│       └── cleaned_hr_data.csv     # 處理後、可直接上傳平台的範例資料
-│       └── raw/                    # 原始資料
-└── docs/
-    └── 論文.pdf                     # （選用）論文全文
+└── notebooks/
+    ├── teacher_baseline.ipynb      # 老師原始版本（離職預測，備存對照）
+    ├── cleaned_hr_data.ipynb       # 資料清洗與特徵工程，產出 cleaned_hr_data.csv
+    ├── validation.ipynb            # （選用）端到端驗證，佐證框架通用性
+    └── data/
+        ├── cleaned_hr_data.csv     # 處理後、可直接上傳平台的範例資料
+        └── raw/                    # 原始資料
 ```
-
-> **重要**：`app.py` 與 `bias_engine.py` 必須位於同一層（根目錄）。`app.py` 以 `from bias_engine import ...` 匯入核心模組，若將其移入子資料夾將導致匯入失敗，且 Streamlit Cloud 預設於根目錄尋找 `app.py`、`requirements.txt`、`packages.txt`。
 
 ---
 
@@ -64,8 +56,6 @@ pip install -r requirements.txt
 
 開啟 `notebooks/cleaned_hr_data.ipynb` 並依序執行所有 cell，完成資料清洗、情境式 IQR 截斷、時間加權與趨勢特徵、以及 SEM 潛在變數萃取，最終輸出 `notebooks/data/cleaned_hr_data.csv`。
 
-> notebook 中的資料路徑可由環境變數覆寫：`export HR_DATA_DIR=./HRDataset_v2/`
-
 ### 步驟二：啟動偏誤偵測平台
 
 ```bash
@@ -78,8 +68,6 @@ streamlit run app.py
 2. 設定**目標變數**（數值型評分，如主管評分）、**敏感特徵**（如性別、種族）、**客觀特徵**（如年資、滿意度）。
 3. 選擇分析方法：殘差法（個人層級）或群體公平性法（群體層級）。
 4. 點擊「開始執行偏誤分析」，檢視報告與圖表，並下載完整 CSV 結果。
-
-> **資料隱私**：上傳前請先去識別化，移除姓名、身分證字號等直接識別資訊。
 
 ---
 
@@ -95,9 +83,6 @@ streamlit run app.py
 
 本研究使用 Kaggle 開源之虛擬 HR 資料集（共 1,470 名員工，績效評核紀錄涵蓋 2012–2022 年），包含 `Employee.csv`、`PerformanceRating.csv`、`EducationLevel.csv` 等檔案。
 
-> 請於此處填入實際的 Kaggle 資料集連結與授權說明：`https://www.kaggle.com/datasets/mahmoudemadabdallah/hr-analytics-employee-attrition-and-performance`
-> 原始資料集因檔案大小與授權考量，未隨 repo 提供；請自行下載後置於 `HRDataset_v2/`。
-
 ---
 
 ## 方法摘要
@@ -112,8 +97,6 @@ streamlit run app.py
 | 統計檢定 | T-test / ANOVA + Cohen's d / η² |
 | 可解釋性 | SHAP（TreeExplainer） |
 
-詳細方法請參閱論文第三章。
-
 ---
 
 ## 限制與免責
@@ -122,11 +105,3 @@ streamlit run app.py
 - 客觀基準仍依賴既有資料分布；若原始資料已含歷史偏誤，模型預測可能延續該偏誤。
 - 公平性具情境依賴性，不同指標之間可能存在衡量差異，偏誤判斷不具唯一標準。
 - 本研究以單一公開資料集進行概念驗證（POC），外部效度仍有限。
-
----
-
-## 作者與論文資訊
-
-- 研究生：余姿瑩
-- 指導教授：葉向原博士
-- 系所：東吳大學巨量資料管理學院 資料科學系碩士在職專班
