@@ -5,19 +5,23 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from bias_engine import HRSchemaMapper, AutoFeatureEngineer, GeneralizedBiasEngine
 
-# 圖表中文字型 — 直接從 repo 載入,不依賴 OS
-import os
+# 中文字型載入(純系統字型,避免 TTF 二進位問題)
 import matplotlib.font_manager as fm
 
-_font_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-                           "fonts", "NotoSansTC-Regular.ttf")
-if os.path.exists(_font_path):
-    fm.fontManager.addfont(_font_path)
-    plt.rcParams['font.sans-serif'] = ['Noto Sans TC'] + plt.rcParams.get('font.sans-serif', [])
+_candidates = ['Noto Sans CJK TC', 'Noto Sans CJK SC',   # Linux / Streamlit Cloud
+               'PingFang TC', 'Heiti TC',                # macOS
+               'Microsoft JhengHei', 'Microsoft YaHei',  # Windows
+               'WenQuanYi Zen Hei']
+_installed = {f.name for f in fm.fontManager.ttflist}
+_use = next((c for c in _candidates if c in _installed), None)
+
+if _use:
+    plt.rcParams['font.sans-serif'] = [_use] + _candidates
     plt.rcParams['font.family'] = 'sans-serif'
-    print(f"[字型診斷] ✓ 已載入 repo 內字型: {_font_path}")
+    print(f"[字型診斷] ✓ 使用字型: {_use}")
 else:
-    print(f"[字型診斷] ⚠️ 找不到 {_font_path},中文可能顯示為方塊")
+    print(f"[字型診斷] ⚠️ 系統無 CJK 字型(掃描到 {len(_installed)} 個字型)")
+    print(f"   → 雲端:確認 repo 根目錄 packages.txt 含 fonts-noto-cjk")
 
 plt.rcParams['axes.unicode_minus'] = False
 
