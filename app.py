@@ -5,23 +5,61 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from bias_engine import HRSchemaMapper, AutoFeatureEngineer, GeneralizedBiasEngine
 
-# 中文字型載入(純系統字型,避免 TTF 二進位問題)
+# 中文字型載入(直接掃硬碟,bypass matplotlib 字型快取)
+import os, glob
+import matplotlib
+import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-_candidates = ['Noto Sans CJK TC', 'Noto Sans CJK SC',   # Linux / Streamlit Cloud
-               'PingFang TC', 'Heiti TC',                # macOS
-               'Microsoft JhengHei', 'Microsoft YaHei',  # Windows
-               'WenQuanYi Zen Hei']
+# ─── 直接掃描已 apt 安裝的 Noto CJK 字型檔(不依賴 matplotlib 快取)───
+_cjk_font_files = []
+for pattern in [
+    '/usr/share/fonts/opentype/noto/NotoSansCJK*',
+    '/usr/share/fonts/opentype/noto/NotoSerifCJK*',
+    '/usr/share/fonts/truetype/noto/NotoSansCJK*',
+    '/usr/share/fonts/truetype/noto-cjk/*.ttc',
+    '/usr/share/fonts/truetype/noto-cjk/*.otf',
+    '/usr/share/fonts/opentype/noto-cjk/*.otf',
+]:
+    _cjk_font_files.extend(glob.glob(pattern))
+
+print(f"[字型診斷] 硬碟掃描找到 {len(_cjk_font_files)} 個 CJK 字型檔")
+for f in _cjk_font_files[:5]:
+    print(f"  - {f}")
+
+# 強制把這些字型塞進 matplotlib font manager
+_added = 0
+for path in _cjk_font_files:
+    try:
+        fm.fontManager.addfont(path)
+        _added += 1
+    except Exception as e:
+        print(f"  ✗ 無法載入 {path}: {e}")
+print(f"[字型診斷] 成功註冊 {_added} 個字型到 matplotlib")
+
+# ─── 找可用字型名稱 ───
+_candidates = ['Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans CJK JP',
+               'Noto Sans Mono CJK TC', 'Noto Serif CJK TC',
+               'PingFang TC', 'Heiti TC',
+               'Microsoft JhengHei', 'WenQuanYi Zen Hei']
 _installed = {f.name for f in fm.fontManager.ttflist}
 _use = next((c for c in _candidates if c in _installed), None)
 
+# 若候選名稱都沒匹配,自動搜尋含 CJK/Noto/Han 等關鍵字的字型
+if not _use:
+    _cjk_in_list = sorted(n for n in _installed if any(
+        k in n.lower() for k in ['cjk', 'noto sans', 'noto serif', 'han', 'heiti', 'pingfang']))
+    print(f"[字型診斷] 候選名單未匹配,fontManager 內偵測到的 CJK 相關字型: {_cjk_in_list[:5]}")
+    if _cjk_in_list:
+        _use = _cjk_in_list[0]
+
+# ─── 套用 ───
 if _use:
     plt.rcParams['font.sans-serif'] = [_use] + _candidates
     plt.rcParams['font.family'] = 'sans-serif'
-    print(f"[字型診斷] ✓ 使用字型: {_use}")
+    print(f"[字型診斷] ✓ 最終使用字型: {_use}")
 else:
-    print(f"[字型診斷] ⚠️ 系統無 CJK 字型(掃描到 {len(_installed)} 個字型)")
-    print(f"   → 雲端:確認 repo 根目錄 packages.txt 含 fonts-noto-cjk")
+    print(f"[字型診斷] ⚠️ 完全沒找到 CJK 字型,圖中文將顯示方塊")
 
 plt.rcParams['axes.unicode_minus'] = False
 
