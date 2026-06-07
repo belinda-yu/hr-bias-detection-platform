@@ -5,6 +5,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from bias_engine import HRSchemaMapper, AutoFeatureEngineer, GeneralizedBiasEngine
 
+# === app.py 最上方,在所有 import 之後加 ===
+import matplotlib.font_manager as fm
+
+_zh_fonts = ['Noto Sans CJK TC', 'Noto Sans CJK SC',
+             'PingFang TC', 'Heiti TC',
+             'Microsoft JhengHei', 'Microsoft YaHei',
+             'Arial Unicode MS', 'DejaVu Sans']
+_installed = {f.name for f in fm.fontManager.ttflist}
+_use_font = next((f for f in _zh_fonts if f in _installed), 'DejaVu Sans')
+
+matplotlib.rcParams['font.sans-serif'] = [_use_font] + _zh_fonts
+matplotlib.rcParams['font.family'] = 'sans-serif'
+matplotlib.rcParams['axes.unicode_minus'] = False
+
+# 診斷用(部署上去後在 Streamlit Cloud Logs 看)
+print(f"[字型診斷] 偵測到 {len(_installed)} 個字型,選用: {_use_font}")
+print(f"[字型診斷] CJK 候選找到: {[f for f in _zh_fonts if f in _installed]}")
+
 # 圖表中文 (支援 Mac 與 Windows)
 plt.rcParams['font.sans-serif'] = [
     'PingFang TC', 'Heiti TC', 'Arial Unicode MS',   # macOS
