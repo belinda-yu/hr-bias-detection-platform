@@ -25,6 +25,23 @@ from sklearn.model_selection import cross_val_predict, KFold, GroupKFold
 from sklearn.metrics import r2_score
 from scipy import stats
 
+# ─── 中文字型設定(雲端 Linux + 本地 Mac/Windows 通吃)─────────────────
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+_zh_fonts = ['Noto Sans CJK TC', 'Noto Sans CJK SC',
+             'PingFang TC', 'Heiti TC',
+             'Microsoft JhengHei', 'Microsoft YaHei',
+             'Arial Unicode MS', 'DejaVu Sans']
+_installed = {f.name for f in fm.fontManager.ttflist}
+_use_font = next((f for f in _zh_fonts if f in _installed), 'DejaVu Sans')
+
+matplotlib.rcParams['font.sans-serif'] = [_use_font] + _zh_fonts
+matplotlib.rcParams['font.family'] = 'sans-serif'
+matplotlib.rcParams['axes.unicode_minus'] = False
+# ────────────────────────────────────────────────────────────────────
+
 """# =============================================================================
 模組 1：HRSchemaMapper (資料對應與清洗層)
 這個模組負責把資料整理成系統看得懂的格式，是此平台的守門員。
