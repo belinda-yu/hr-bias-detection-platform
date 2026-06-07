@@ -2,21 +2,8 @@ import streamlit as st
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
 import seaborn as sns
 from bias_engine import HRSchemaMapper, AutoFeatureEngineer, GeneralizedBiasEngine
-
-# 中文字型 fallback 列表 — 雲端 (Noto Sans CJK) → Mac → Windows → 通用
-_zh_fonts = ['Noto Sans CJK TC', 'PingFang TC', 'Heiti TC', 
-             'Microsoft JhengHei', 'Microsoft YaHei',
-             'Arial Unicode MS', 'DejaVu Sans']
-# 找系統實際有的第一個字型
-_installed = {f.name for f in fm.fontManager.ttflist}
-_use = next((f for f in _zh_fonts if f in _installed), 'DejaVu Sans')
-
-matplotlib.rcParams['font.sans-serif'] = [_use] + _zh_fonts
-matplotlib.rcParams['font.family'] = 'sans-serif'
-matplotlib.rcParams['axes.unicode_minus'] = False  # 解決負號顯示為方塊
 
 # 圖表中文 (支援 Mac 與 Windows)
 plt.rcParams['font.sans-serif'] = [
