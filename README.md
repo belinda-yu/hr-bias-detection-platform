@@ -29,7 +29,7 @@ https://hr-bias-detection-platform-belinda-yu.streamlit.app/
 
 ## 專案結構
 
-project-root/
+    project-root/
 
     ├── app.py                          # Streamlit 平台入口
 
