@@ -29,7 +29,7 @@ https://hr-bias-detection-platform-belinda-yu.streamlit.app/
 
 ## 專案結構
 
-\`\`\`
+```
 project-root/
 ├── app.py                          # Streamlit 平台入口
 ├── bias_engine.py                  # 核心模組(與 app.py 同層)
@@ -46,7 +46,7 @@ project-root/
             ├── 1.inx_future.csv        # INX Future Inc(IABAC, N = 1,200)
             ├── 2.rich_hr.csv           # Rich Huebner's HR(MSHRM, N = 311)
             └── README.txt              # 驗證資料來源與授權說明
-\`\`\`
+```
 
 ---
 
