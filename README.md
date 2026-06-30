@@ -8,7 +8,7 @@
 
 ## 線上平台
 
-公開可存取的 Streamlit 平台:
+公開可存取的 Streamlit 平台：
 https://hr-bias-detection-platform-belinda-yu.streamlit.app/
 
 無須安裝，瀏覽器直接使用。
