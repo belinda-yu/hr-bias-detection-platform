@@ -30,20 +30,35 @@ https://hr-bias-detection-platform-belinda-yu.streamlit.app/
 ## 專案結構
 
 project-root/
+
 ├── app.py                          # Streamlit 平台入口
+
 ├── bias_engine.py                  # 核心模組(與 app.py 同層)
+
 ├── requirements.txt                # Python 套件清單
+
 ├── packages.txt                    # 系統套件(中文字型 fonts-noto-cjk)
+
 ├── .gitattributes
+
 ├── README.md
+
 └── notebooks/
+
     ├── cleaned_hr_data.ipynb       # 資料清洗與特徵工程，產出 cleaned_hr_data.csv
+    
     ├── validation_02.ipynb         # 跨資料集驗證：動作一(框架通用性)、動作二(Baseline 對照)、動作三(形成性 vs 反映性構念分析)
+    
     └── data/
+    
         ├── cleaned_hr_data.csv         # 主資料(N = 1,224，47 欄位)
+        
         └── cross_validation/
+        
             ├── 1.inx_future.csv        # INX Future Inc(IABAC, N = 1,200)
+            
             ├── 2.rich_hr.csv           # Rich Huebner's HR(MSHRM, N = 311)
+            
             └── README.txt              # 驗證資料來源與授權說明
 
 ---
